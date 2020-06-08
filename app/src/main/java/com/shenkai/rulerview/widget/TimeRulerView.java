@@ -124,9 +124,9 @@ public class TimeRulerView extends View implements View.OnScrollChangeListener {
         mStepValue = stepValue;
         mStartSeriesValue = minValue / stepValue;
         mEndSeriesValue = maxValue / stepValue;
+        mSelectedSeriesValue = mSelectedValue / mStepValue;
 
         mTotalLineCount = (mMaxValue - mMinValue) / mStepValue + 1;
-        mSelectedSeriesValue = mSelectedValue / mStepValue;
     }
 
     public void setOnValueChangeListener(OnValueChangeListener mListener) {
@@ -228,11 +228,6 @@ public class TimeRulerView extends View implements View.OnScrollChangeListener {
         Log.w(TAG, "computeAndCallback:" + scrollX);
         mSelectedSeriesValue = getCurrentSeriesValue(scrollX);
 
-        if (mSelectedSeriesValue >= mEndSeriesValue) {
-            mSelectedSeriesValue = mEndSeriesValue;
-        } else if (mSelectedSeriesValue <= mStartSeriesValue) {
-            mSelectedSeriesValue = mStartSeriesValue;
-        }
         if (mListener != null) {
             mListener.onValueChange(mSelectedSeriesValue * mStepValue);
         }
@@ -255,7 +250,7 @@ public class TimeRulerView extends View implements View.OnScrollChangeListener {
     }
 
     private void countVelocityTracker() {
-        mVelocityTracker.computeCurrentVelocity(1000, mMaxVelocity);//初始化速率的单位 px/s
+        mVelocityTracker.computeCurrentVelocity(1000, mMaxVelocity*0.5f);//初始化速率的单位 px/s
         float xVelocity = mVelocityTracker.getXVelocity(); //当前的速度
         Log.d(TAG, "xVelocity:" + xVelocity);
         if (Math.abs(xVelocity) > mMinVelocity * 30) {
